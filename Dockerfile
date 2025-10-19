@@ -1,19 +1,10 @@
 # Utilisation d'une image de base légère
-FROM debian:stable-slim
+FROM python:3-alpine
 
-# Mise à jour et installation des dépendances
-RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
-    ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache ffmpeg curl && \
+    curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl && \
+    chmod a+rx /usr/local/bin/youtube-dl
 
-# Téléchargement de youtube-dl et attribution des droits
-RUN curl -L https://ytdl-org.github.io/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl \
-    && chmod a+rx /usr/local/bin/youtube-dl
-
-# Vérification des installations
-RUN youtube-dl --version && ffmpeg -version
-
-# Définir youtube-dl comme commande par défaut
-ENTRYPOINT ["youtube-dl"]
+VOLUME /downloads
+WORKDIR /downloads
+ENTRYPOINT ["youtube-dl", "https://www.youtube.com/watch?v=IYkf_JBroZ4"]

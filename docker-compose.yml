@@ -2,10 +2,12 @@ version: "3.9"
 
 services:
   youtube-dl:
-    build: .
+    image: qmcgaw/youtube-dl-alpine
     container_name: youtube-dl
     volumes:
-      - ./downloads:/downloads
-    working_dir: /downloads
-    entrypoint: ["youtube-dl"]
-    command: ["-f", "${VIDEO_FORMAT}", "-o", "%(title)s.%(ext)s", "${VIDEO_URL}"]
+      - ./downloads:/downloads   # Dossier local pour stocker les vidéos
+    environment:
+      - AUTOUPDATE=yes           # Met à jour youtube-dl automatiquement
+    entrypoint: youtube-dl       # Définit youtube-dl comme commande par défaut
+    restart: unless-stopped
+
