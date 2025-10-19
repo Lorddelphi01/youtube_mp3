@@ -1,10 +1,18 @@
-# Utilisation d'une image de base légère
-FROM python:3-alpine
+FROM debian:stable-slim
 
-RUN apk add --no-cache ffmpeg curl && \
-    curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl && \
-    chmod a+rx /usr/local/bin/youtube-dl
+# Installer les dépendances
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    python3 \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
-VOLUME /downloads
-WORKDIR /downloads
-ENTRYPOINT ["youtube-dl", "https://www.youtube.com/watch?v=IYkf_JBroZ4"]
+# Télécharger youtube-dl
+RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl \
+    && chmod a+rx /usr/local/bin/youtube-dl
+
+# Vérifier les versions
+RUN python3 --version && youtube-dl --version && ffmpeg -version
+
+ENTRYPOINT ["youtube-dl"]
