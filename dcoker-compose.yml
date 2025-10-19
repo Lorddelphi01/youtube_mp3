@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  youtube-dl:
+    build: .
+    container_name: youtube-dl
+    volumes:
+      - ./downloads:/downloads
+    working_dir: /downloads
+    entrypoint: ["youtube-dl"]
+    # Exemple de commande par défaut : télécharge la vidéo au format MP4
+    command: ["-f", "bestvideo+bestaudio", "-o", "%(title)s.%(ext)s", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"]
