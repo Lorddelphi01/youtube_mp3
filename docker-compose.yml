@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  youtube-dl:
+    build: .
+    container_name: youtube-dl
+    volumes:
+      - ./downloads:/downloads
+    working_dir: /downloads
+    entrypoint: ["youtube-dl"]
+    command: ["-f", "${VIDEO_FORMAT}", "-o", "%(title)s.%(ext)s", "${VIDEO_URL}"]
